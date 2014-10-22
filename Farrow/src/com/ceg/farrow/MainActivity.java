@@ -4,16 +4,34 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity {
-
+	
+	private TextView usernameView, passwordView;
+	private String username, password;
+	private Button btnLogIn;
+	private static final String USER = "farrow", PASS = "2014";
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        this.btnLogIn = (Button)this.findViewById(R.id.logIn);
+        this.usernameView = (TextView)this.findViewById(R.id.username);
+        this.passwordView = (TextView)this.findViewById(R.id.password);
+        
+        btnLogIn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				logIn();
+			}
+		});
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -32,5 +50,14 @@ public class MainActivity extends ActionBarActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    
+    public void logIn(){
+    	this.username = usernameView.getText().toString();
+    	this.password = passwordView.getText().toString();
+    	
+    	if(username.equalsIgnoreCase(USER) && password.equals(PASS)){
+    		//Here goes intent to chat activity
+    	}
     }
 }
