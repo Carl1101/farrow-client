@@ -9,30 +9,38 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class ChatActivity extends ActionBarActivity {
 	
 	private Socket socket;
 	private static final int SERVER_PORT = 9001;
-	private static final String SERVER_IP = "172.20.10.9";
-	private TextView chatView;
+	private static final String SERVER_IP = "10.250.12.131";
+	private ListView chatView;
 	private EditText messageView;
 	private Button sendButton;
-
+	private PrintWriter out; 
+	private BufferedReader in;
+	private ArrayAdapter<String> adapter;
+	private ArrayList<String> chatList = new ArrayList<String>();
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chat);
 		
-		this.chatView = (TextView)this.findViewById(R.id.chat);
+		this.chatView = (ListView)this.findViewById(R.id.chat);
 		this.messageView = (EditText)this.findViewById(R.id.message);
 		this.sendButton = (Button)this.findViewById(R.id.sendBtn);
 		
@@ -54,21 +62,30 @@ public class ChatActivity extends ActionBarActivity {
 	}
 	public void sendMessage()
 	{
-		try {
-			String str = messageView.getText().toString();
-			PrintWriter out = new PrintWriter(new BufferedWriter(
-					new OutputStreamWriter(socket.getOutputStream())),
-					true);
-			BufferedReader input = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
-			out.println(str);
-			System.out.println(input.readLine());
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	try {
+		String str = messageView.getText().toString();
+		out = new PrintWriter(new BufferedWriter(
+				new OutputStreamWriter(socket.getOutputStream())),
+				true);
+		out.println(str);
+		addMessage(str);
+		populateListView();
+	} catch (UnknownHostException e) {
+		e.printStackTrace();
+	} catch (IOException e) {
+		e.printStackTrace();
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+	}
+	
+	public void populateListView(){
+		this.adapter = new ArrayAdapter<String>(this, R.layout.items,chatList);
+		chatView.setAdapter(adapter);
+	}
+	
+	public void addMessage(String message){
+		chatList.add(message);
 	}
 	
 	@Override

@@ -8,17 +8,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.ceg.farrow.ChatActivity" >
 
-    <TextView
-        android:id="@+id/chat"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:text="@string/chatView"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:background="@drawable/borderchat" />
-
     <Button
         android:id="@+id/sendBtn"
         android:layout_width="match_parent"
@@ -34,10 +23,21 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_above="@+id/sendBtn"
-        android:layout_alignLeft="@+id/chat"
-        android:layout_marginBottom="49dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="32dp"
         android:background="@drawable/borderchat"
         android:ems="10"
-        android:inputType="textMultiLine" />
+        android:inputType="textMultiLine" >
+
+        <requestFocus />
+    </EditText>
+
+    <ListView
+        android:id="@+id/chat"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/borderchat" >
+    </ListView>
 
 </RelativeLayout>
