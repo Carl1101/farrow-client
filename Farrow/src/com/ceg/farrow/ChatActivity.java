@@ -20,7 +20,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public class ChatActivity extends ActionBarActivity {
 	
@@ -31,7 +30,7 @@ public class ChatActivity extends ActionBarActivity {
 	private EditText messageView;
 	private Button sendButton;
 	private PrintWriter out; 
-	private BufferedReader in;
+	private BufferedReader in ;
 	private ArrayAdapter<String> adapter;
 	private ArrayList<String> chatList = new ArrayList<String>();
 	
@@ -45,7 +44,6 @@ public class ChatActivity extends ActionBarActivity {
 		this.sendButton = (Button)this.findViewById(R.id.sendBtn);
 		
 		new Thread(new ClientThread()).start();
-		
 		sendButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -68,8 +66,6 @@ public class ChatActivity extends ActionBarActivity {
 				new OutputStreamWriter(socket.getOutputStream())),
 				true);
 		out.println(str);
-		addMessage(str);
-		populateListView();
 	} catch (UnknownHostException e) {
 		e.printStackTrace();
 	} catch (IOException e) {
@@ -108,6 +104,7 @@ public class ChatActivity extends ActionBarActivity {
 				InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
 
 				socket = new Socket(serverAddr, SERVER_PORT);
+				new Thread(new MessageListener()).start();
 
 			} catch (UnknownHostException e1) {
 				e1.printStackTrace();
@@ -117,5 +114,32 @@ public class ChatActivity extends ActionBarActivity {
 
 		}
 
+	}
+	class MessageListener implements Runnable {
+
+		@Override
+		public void run() {
+			try {
+				in = new BufferedReader(new InputStreamReader(
+				        socket.getInputStream()));
+				while (true) {
+					String message = in.readLine();
+					if(message != null){
+						addMessage(message);
+						
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								// TODO Auto-generated method stub
+								populateListView();
+							}
+						});
+					}
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 }
