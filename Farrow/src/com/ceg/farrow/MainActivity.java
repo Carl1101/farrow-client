@@ -58,7 +58,7 @@ public class MainActivity extends ActionBarActivity {
     	this.password = passwordView.getText().toString();
     	
     	if(username.equalsIgnoreCase(USER) && password.equals(PASS)){
-    		Intent i = new Intent(this, ChatActivity.class);
+    		Intent i = new Intent(this, Set_data.class);
     		startActivity(i);
     	}
     	else{

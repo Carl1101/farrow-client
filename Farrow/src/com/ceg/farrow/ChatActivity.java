@@ -12,7 +12,9 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,8 +26,9 @@ import android.widget.ListView;
 public class ChatActivity extends ActionBarActivity {
 	
 	private Socket socket;
-	private static final int SERVER_PORT = 9001;
-	private static final String SERVER_IP = "10.250.12.131";
+	private Intent i;
+	private int serverPort;
+	private String serverIp;
 	private ListView chatView;
 	private EditText messageView;
 	private Button sendButton;
@@ -39,6 +42,10 @@ public class ChatActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chat);
 		
+		this.i = getIntent();
+		this.serverIp = this.i.getStringExtra("ip");
+		this.serverPort = this.i.getIntExtra("port", 0);
+		Log.i("test", serverIp);
 		this.chatView = (ListView)this.findViewById(R.id.chat);
 		this.messageView = (EditText)this.findViewById(R.id.message);
 		this.sendButton = (Button)this.findViewById(R.id.sendBtn);
@@ -101,9 +108,9 @@ public class ChatActivity extends ActionBarActivity {
 		public void run() {
 			
 			try {
-				InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
+				InetAddress serverAddr = InetAddress.getByName(serverIp);
 
-				socket = new Socket(serverAddr, SERVER_PORT);
+				socket = new Socket(serverAddr, serverPort);
 				new Thread(new MessageListener()).start();
 
 			} catch (UnknownHostException e1) {
